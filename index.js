@@ -3,9 +3,11 @@ const app = express()
 const morgan = require('morgan')
 app.use(morgan('tiny'));
 app.use(express.json())
-const cors = require('cors')
 
+const cors = require('cors')
 app.use(cors())
+
+app.use(express.static('dist'))
 
 app.use((req, res, next) => {
   if (req.method === 'POST') {
@@ -13,9 +15,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-
-
-
 
 let notes = [
     { 
