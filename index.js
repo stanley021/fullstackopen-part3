@@ -56,24 +56,32 @@ app.post('/api/persons', (req, res) => {
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
-  const { name, number } = req.body
+  const id = req.params.id;
+  const { name, number } = req.body;
 
-
-  if (!name || !number) {
-    return res.status(400).json({ error: 'name or number is missing' })
+  // Check if ID is valid
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
   }
 
-  Contact.findByIdAndUpdate(req.params.id, { name, number }, { new: true })
+  if (!name || !number) {
+    return res.status(400).json({ error: 'Name or number is missing' });
+  }
+
+  // Update the contact
+  Contact.findByIdAndUpdate(id, { name, number }, { new: true, runValidators: true })
     .then(updatedContact => {
       if (updatedContact) {
-        res.json(updatedContact)
+        res.json(updatedContact);
       } else {
-        res.status(404).end()
+        res.status(404).json({ error: 'Contact not found' });
       }
     })
-    .catch(err => next(err))
-})
-
+    .catch(err => {
+      console.error('Error updating contact:', err);
+      res.status(500).json({ error: 'Failed to update contact' });
+    });
+});
 
 app.get('/api/persons/:id', (req, res, next) => {
   Contact.findById(req.params.id)

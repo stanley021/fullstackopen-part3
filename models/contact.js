@@ -30,6 +30,7 @@ const phoneNumberValidator = (value) => {
 }
 
 const contactSchema = new mongoose.Schema({
+  
   name:{
     type: String,
     minLength: 3,
