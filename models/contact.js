@@ -5,30 +5,29 @@ require('dotenv').config()
 //   console.log('give password as argument')
 //   process.exit(1)
 // }
-const url = process.env.MONGODB_URL;
-console.log("MongoDB URL:", url);
+const url = process.env.MONGODB_URL
 
-const password = process.argv[2]
+// const password = process.argv[2]
 
-const name = process.argv[3]
-const number = process.argv[4]
+// const name = process.argv[3]
+// const number = process.argv[4]
 
 
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
-.then(result => {
-  console.log("Connected to database")
-})
-.catch(error =>{
-  console.log("Issue with connecting to database", error.message)
-})
+  .then(
+    console.log('Connected to database(Contact)')
+  )
+  .catch(error => {
+    console.log('Issue with connecting to database', error.message)
+  })
 
 const phoneNumberValidator = (value) => {
   // Regular expression to match phone number format
-  const phoneNumberPattern = /^[0-9]{2,3}-[0-9]+$/;
-  
-  return phoneNumberPattern.test(value) && value.length >= 8;
-};
+  const phoneNumberPattern = /^[0-9]{2,3}-[0-9]+$/
+
+  return phoneNumberPattern.test(value) && value.length >= 8
+}
 
 const contactSchema = new mongoose.Schema({
   name:{
@@ -45,17 +44,17 @@ const contactSchema = new mongoose.Schema({
     required: [true, 'Phone number required']
   },
 
-});
+})
 
 contactSchema.set('toJSON', {
-  transform: (document, returnedObject) =>{
+  transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
   }
 })
 
-const Contact = mongoose.model('Contact', contactSchema)
+// const Contact = mongoose.model('Contact', contactSchema)
 
 // const contact = new Contact({
 //     name: name ,
@@ -70,7 +69,7 @@ const Contact = mongoose.model('Contact', contactSchema)
 //         })
 //         mongoose.connection.close()
 //     })
-    
+
 // }
 
 // else if(process.argv.length > 3){
@@ -82,4 +81,4 @@ const Contact = mongoose.model('Contact', contactSchema)
 
 
 
-module.exports = mongoose.model("Contact", contactSchema)
+module.exports = mongoose.model('Contact', contactSchema)
